@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import assets from "../assets/assets";
+import { AuthContext } from "../../context/AuthContext";
 
 function LoginPage() {
   const [currentState, setCurrentState] = useState("Login"); // "Login" | "Sign Up" | "Forgot Password"
@@ -8,10 +9,12 @@ function LoginPage() {
   const [password, setPassword] = useState("");
   const [isDataSubmitted, setIsDataSubmitted] = useState(false);
 
+  const {login} = useContext(AuthContext);
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (currentState === "Sign Up") {
+    if (currentState === "Sign Up" && !isDataSubmitted)  {
       console.log("User Signed Up:", { fullName, email, password });
       alert("Sign Up Successful");
       setCurrentState("Login");
@@ -21,6 +24,8 @@ function LoginPage() {
       setPassword("");
       return;
     }
+
+    login(currentState ==="Sign Up" ? "signup" :"login",{fullName,email,password})
 
     if (currentState === "Login") {
       console.log("User Logged In:", { email, password });

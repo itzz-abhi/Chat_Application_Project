@@ -33,7 +33,7 @@ export const AuthProvider = ({children})=>{
 
     const login = async (state,credentials)=>{
         try{
-            const {data} = await axios.post(`/api/auth ${state}`, credentials);
+            const {data} = await axios.post(`/api/auth/${state}`, credentials);
             if(data.success){
                 setAuthUser(data.userData);
                 connectSocket(data.userData);
@@ -64,6 +64,17 @@ export const AuthProvider = ({children})=>{
     }
 
     //update profile function to handle user profile updates 
+    const updateProfile = async (body)=>{
+        try {
+            const {data} = await axios.put("/api/auth/update-profile", body);
+            if(data.success){
+                setAuthUser(data.user);
+                toast.success("Profile Updates Successfully")
+            }
+        } catch (error) {
+            toast.error(error.message);
+        }
+    }
 
     //Connect socket function to handle socket connection and online user updates
     const connectSocket = (userData) =>{
@@ -94,7 +105,10 @@ export const AuthProvider = ({children})=>{
         axios,
         authUser,
         onlineUser,
-        socket
+        socket,
+        login,
+        logout,
+        updateProfile
     }
     return(
         <AuthContext.Provider value={value}>
